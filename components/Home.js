@@ -59,12 +59,19 @@ const Home = ({ navigation }) => {
             )
         })
     }, [navigation])
+
+    const enterChat = (id, chatName) => {
+        navigation.navigate('AllChat', {
+            id, chatName
+        })
+    }
+
     return (
         <SafeAreaView>
             <ScrollView style={styles.container}>
                 {chats.map(({ id, data: { chatName } }) => (
-                    <CustomListItem key={id} id={id} chatName={chatName} />
-                ))} 
+                    <CustomListItem key={id} id={id} chatName={chatName} enterChat={enterChat} />
+                ))}
                 {/* {
                     chats.map((chat) => <CustomListItem key={chat.id} chat={chat}></CustomListItem>)
                 } */}
@@ -78,6 +85,6 @@ export default Home
 
 const styles = StyleSheet.create({
     container: {
-        height:"100%"
+        height: "100%"
     }
 })

@@ -7,6 +7,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import AddChat from './components/AddChat';
+import AllChat from './components/AllChat';
 
 const Stack = createStackNavigator()
 
@@ -31,6 +32,7 @@ export default function App() {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AddChat" component={AddChat} />
+        <Stack.Screen name="AllChat" component={AllChat} />
       </Stack.Navigator>
     </NavigationContainer>
 
