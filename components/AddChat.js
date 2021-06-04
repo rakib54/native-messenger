@@ -27,7 +27,7 @@ const AddChat = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Input
-                placeholder="chat name"
+                placeholder="Chat name"
                 value={input}
                 onChangeText={(text) => setInput(text)}
                 leftIcon={
@@ -35,7 +35,7 @@ const AddChat = ({ navigation }) => {
                 }
                 onSubmitEditing={createChat}
             />
-            <Button onPress={createChat} title="create new chat" />
+            <Button disabled={!input} onPress={createChat} title="create new chat" />
         </View>
     )
 }

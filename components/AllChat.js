@@ -14,7 +14,6 @@ const AllChat = ({ navigation, route }) => {
 
     const [input, setInput] = useState("")
     const [messages, setMessages] = useState([])
-    console.log(messages);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -23,7 +22,8 @@ const AllChat = ({ navigation, route }) => {
             headerTitleAlign: "left",
             headerTitle: () => (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                    <Avatar rounded source={{ uri: "https://png.pngtree.com/element_our/20200610/ourmid/pngtree-black-default-avatar-image_2237212.jpg" }} />
+                    <Avatar rounded 
+                    source={{ uri: messages[0]?.data.photoURL }} />
 
                     <Text style={{ color: "white", marginLeft: 10, fontWeight: 600 }}>{route.params.chatName}</Text>
                 </View>
@@ -51,7 +51,7 @@ const AllChat = ({ navigation, route }) => {
                 </View>
             )
         })
-    }, [navigation])
+    }, [navigation,messages])
 
     const sendMessage = () => {
         Keyboard.dismiss()
@@ -71,15 +71,15 @@ const AllChat = ({ navigation, route }) => {
             .doc(route.params.id)
             .collection("message")
             .orderBy("timestamp", "desc")
-            .onSnapshot((snapshot) => setMessages (
-                    snapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        data: doc.data()
-                    }))
-                )
+            .onSnapshot((snapshot) => setMessages(
+                snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data()
+                }))
+            )
             )
         return AllChat
-        
+
     }, [route])
 
     return (
@@ -92,20 +92,35 @@ const AllChat = ({ navigation, route }) => {
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <>
-                        <ScrollView>
+                        <ScrollView contentContainerStyle={{paddingTop: 10}}>
 
                             {
-                                messages.map(({ id, data }) => 
+                                messages.map(({ id, data }) =>
                                     data.email === auth.currentUser.email ? (
                                         <View key={id} style={styles.receiver}>
-                                            <Avatar rounded />
+                                            <Avatar containerStyle={{}}
+                                                position="absolute"
+                                                rounded
+                                                bottom={-15}
+                                                right={-5}
+                                                size={20}
+                                                source={{ uri: data.photoURL }}
+                                            />
                                             <Text style={styles.receiverText}>{data?.message}</Text>
                                         </View>
                                     ) :
                                         (
                                             <View key={id} style={styles.sender}>
-                                                <Avatar rounded />
+                                                <Avatar rounded 
+                                                    position="absolute"
+                                                    rounded
+                                                    bottom={-15}
+                                                    right={-5}
+                                                    size={20}
+                                                    source={{ uri: data.photoURL }}
+                                                />
                                                 <Text style={styles.senderText}>{data?.message}</Text>
+                                                <Text style={styles.senderName}>{data?.displayName}</Text>
                                             </View>
                                         )
                                 )
@@ -116,7 +131,7 @@ const AllChat = ({ navigation, route }) => {
                             <TextInput
                                 value={input}
                                 onChangeText={(text) => setInput(text)}
-                                placeholder="messenger"
+                                placeholder="Type a message"
                                 onSubmitEditing={sendMessage}
                                 style={styles.TextInput}
                             />
@@ -156,10 +171,16 @@ const styles = StyleSheet.create({
         padding: 10
     },
     receiverText: {
-
+        color: 'black',
+        fontWeight: "500",
+        marginLeft: 10,
+        marginBottom: 15
     },
     senderText: {
-
+        color: 'black',
+        fontWeight: "500",
+        marginLeft: 10,
+        marginBottom: 15
     },
     receiver: {
         padding: 15,
@@ -170,5 +191,20 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         maxWidth: "80%",
         position: 'relative'
+    },
+    sender: {
+        padding: 15,
+        backgroundColor: "#2B6BE6",
+        alignSelf: 'flex-start',
+        borderRadius: 20,
+        margin: 15,
+        maxWidth: "80%",
+        position: 'relative'
+    },
+    senderName: {
+        left: 10,
+        paddingRight: 10,
+        fontSize: 10,
+        color: 'white'
     }
 })
